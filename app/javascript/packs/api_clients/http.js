@@ -7,6 +7,7 @@ http.base = function(method, url, data) {
       url,
       createFetchParams(method, data)
     ).then((response) => {
+      if (!response.ok) throw new Error(response.statusText);
       return response.json();
     }).then((response) => {
       resolve(response);

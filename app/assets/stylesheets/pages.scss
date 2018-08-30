@@ -1,3 +1,72 @@
 // Place all the styles related to the pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$border-color: #E6ECF1;
+$green: #6cd4b8;
+
+%outlined-input {
+  background: white;
+  padding: 15px 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+  border-radius: 3px;
+  border: 1px solid $border_color;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $green;
+    transition: all 0.2s ease;
+  }
+
+  &:focus {
+    border-color: $green;
+    transition: all 0.2s ease;
+  }
+}
+
+input {
+  @extend %outlined-input;
+}
+
+button {
+  @extend %outlined-input;
+  color: darken($border-color, 25%);
+  font-size: 14px;
+  padding-right: 20px;
+  padding-left: 20px;
+
+  &:hover {
+    cursor: pointer;
+    color: darken($green, 10%);
+  }
+}
+
+.input-button-combo {
+  display: flex;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px 0 rgba(116, 129, 141, 0.1);
+
+  input {
+    flex-grow: 1;
+    flex-shrink: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  button {
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+.home {
+  box-sizing: border-box;
+  padding: 40px;
+  font-family: sans-serif;
+}

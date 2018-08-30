@@ -10,7 +10,7 @@ client.getPerson = function(id) {
 
   return http.get(url).then((res) => {
     if (res.status === 'success') return res;
-    createPersonFromStarwarsApi(id);
+    return createPersonFromStarwarsApi(id);
   });
 }
 
@@ -21,8 +21,11 @@ client.createPerson = function(person) {
 export default client;
 
 function createPersonFromStarwarsApi(id) {
-  return starWarsClient.getPerson(id).then((person) => {
-    console.log(person);
-    return client.createPerson({ ...person, swapi_id: id });
+  return starWarsClient.getPerson(id).then((res) => {
+    return client.createPerson({ ...res, swapi_id: id });
+  }).then((res) => {
+    return res;
+  }).catch((err) => {
+    console.log('err', err);
   });
 }
