@@ -2,18 +2,11 @@ import 'whatwg-fetch';
 const http = {};
 
 http.base = function(method, url, data) {
-  return new Promise((resolve, reject) => {
-    fetch(
-      url,
-      createFetchParams(method, data)
-    ).then((response) => {
-      if (!response.ok) throw new Error(response.statusText);
-      return response.json();
-    }).then((response) => {
-      resolve(response);
-    }).catch((error) => {
-      reject(error);
-    });
+  return fetch(url, fetchParams(method, data)).then((response) => {
+    if (!response.ok) throw new Error(response.statusText);
+    return response.json();
+  }).catch((err) => {
+    console.log('error', err);
   });
 };
 
@@ -39,7 +32,7 @@ http.delete = function(url, data) {
 
 export default http;
 
-function createFetchParams(method, bodyData) {
+function fetchParams(method, bodyData) {
   const params = {
     method: method,
     mode: 'cors',

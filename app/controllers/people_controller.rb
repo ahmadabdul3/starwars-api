@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class PersonsController < ApplicationController
+class PeopleController < ApplicationController
   def show
     person = Person.find_by_swapi_id(params['id'])
 
     if person
-      render json: { person: person, status: 'success' }
+      render json: { person: person }
     else
-      render json: { message: 'cant find person', status: 'fail' }
+      render json: { message: 'cant find person' }, status: :not_found
     end
   end
 
@@ -15,9 +15,10 @@ class PersonsController < ApplicationController
     person = Person.new(valid_params)
 
     if person.save
-      render json: { person: person, status: 'success', }
+      render json: { person: person }
     else
-      render json: { message: 'person creation failed', status: 'fail' }
+      # just sending a bad request back for now
+      render json: { message: 'person creation failed' }, status: :bad_request
     end
   end
 
