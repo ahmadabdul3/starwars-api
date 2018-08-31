@@ -93,10 +93,12 @@ button {
   .key {
     display: inline-block;
     font-weight: bold;
-    width: 150px;
+    width: 200px;
   }
 
   .value, .value-link {
+    display: inline-block;
+    max-width: calc(100% - 210px);
     margin-left: 5px;
   }
 
