@@ -10,15 +10,15 @@ const client = {
 };
 
 client.getResource = function({ resource, id }) {
-  const url = buildUrl({ resource, id });
-  if (this.resourceInApp(resource)) return this.getResourceFromApp(url);
+  if (this.resourceInApp(resource)) return this.getResourceFromApp({ resource, id });
   return starWarsClient.getResource({ resource, id });
 }
 
-client.getResourceFromApp = function(url) {
+client.getResourceFromApp = function({ resource, id }) {
+  const url = buildUrl({ resource, id });
   return http.get(url).then((res) => {
     if (res) return res;
-    return createPersonFromStarwarsApi(id);
+    return createPersonFromStarwarsApi({ resource, id });
   });
 }
 
@@ -28,8 +28,8 @@ client.createPerson = function(person) {
 
 export default client;
 
-function createPersonFromStarwarsApi(id) {
-  return starWarsClient.getPerson(id).then((res) => {
+function createPersonFromStarwarsApi({ resource, id }) {
+  return starWarsClient.getResource({ resource, id }).then((res) => {
     if (res) return client.createPerson({ ...res, swapi_id: id });
   });
 }

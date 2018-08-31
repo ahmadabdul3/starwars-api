@@ -28,9 +28,9 @@ class DataValue extends PureComponent {
   determineElement(value, key) {
     if (value.indexOf('https://') > -1) {
       return (
-        <a key={`${key}${value}`} className='value value-link'>
-          {value}
-        </a>
+        <span key={`${key}${value}`} className='value value-link'>
+          <button>{value}</button>
+        </span>
       );
     }
 
