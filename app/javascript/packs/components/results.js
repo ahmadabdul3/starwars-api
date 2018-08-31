@@ -1,12 +1,48 @@
 import React, { PureComponent } from 'react';
 
 export default class Results extends PureComponent {
+  get markup() {
+    const { data } = this.props;
+
+    if (data.results) return <ManyResources { ...this.props } />;
+    return <SingleResource { ...this.props } />;
+  }
+
   render() {
-    const { data, linkClick } = this.props;
+    const { data } = this.props;
     if (!data) return null;
 
     return (
       <div className='results'>
+        { this.markup }
+      </div>
+    );
+  }
+}
+
+class ManyResources extends PureComponent {
+  render() {
+    const { data, linkClick } = this.props;
+
+    return (
+      <div>
+        {
+          data.results.map((item, index) => {
+            const key = `${index}-${item.url}`;
+            return <SingleResource key={key} data={item} linkClick={linkClick} />
+          })
+        }
+      </div>
+    )
+  }
+}
+
+class SingleResource extends PureComponent {
+  render() {
+    const { data, linkClick } = this.props;
+
+    return (
+      <div className='result'>
         {
           Object.keys(data).map((dataKey, index) => {
             return (

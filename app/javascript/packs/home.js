@@ -13,22 +13,33 @@ export default class Home extends PureComponent {
   componentDidMount() {
     const resource = 'people';
     const id = '1';
-    this.makeRequest({ resource, id });
+    this.getSingleResourceItem({ resource, id });
   }
 
   submitForm = (e) => {
     e.preventDefault();
     const { resource, id } = this.getResourceParts(this.state.inputValue);
-    this.makeRequest({ resource, id });
+    if (id) this.getSingleResourceItem({ resource, id });
+    else this.getAllResourceItems({ resource });
   }
 
-  makeRequest({ resource, id }) {
-    appClient.getResource({ resource, id }).then((res) => {
-      if (res) this.setState({ apiData: res.resource || res });
-    }).catch((err) => {
-      console.warn('err', err);
-    });
+  getSingleResourceItem({ resource, id }) {
+    appClient.getResource({ resource, id })
+      .then(this.handleResponse)
+      .catch(this.handleError);
   }
+
+  getAllResourceItems({ resource }) {
+    starWarsClient.getAll({ resource })
+      .then(this.handleResponse)
+      .catch(this.handleError);
+  }
+
+  handleResponse = (res) => {
+    if (res) this.setState({ apiData: res.resource || res });
+  }
+
+  handleError = (err) => { console.warn('err', err); }
 
   getResourceParts(inputValue) {
     const parts = inputValue.split('/');
@@ -48,7 +59,7 @@ export default class Home extends PureComponent {
     const { resource, id } = this.getResourceParts(resourcePath);
 
     this.setState({ inputValue: `${resource}/${id}` });
-    this.makeRequest({ resource, id });
+    this.getSingleResourceItem({ resource, id });
   }
 
   render() {

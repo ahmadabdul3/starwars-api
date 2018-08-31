@@ -16,6 +16,21 @@ const client = {
   },
 };
 
+// - defer all 'index' requests - ie. requests without an id -
+//   to SWAPI
+// - this will keep this code simpler - otherwise I have to
+//   keep track of how many items I've cached, and compare that
+//   with how many there are total at SWAPI - and do some
+//   conditional logic to hit this app's API vs SWAPI
+client.getAll = function({ resource }) {
+  if (this.isValidResource(resource)) {
+    const fullUrl = `${this.baseUrl}${resource}/`;
+    return http.get(fullUrl);
+  }
+
+  return new Promise((resolve, reject) => reject(`invalid resource: '${resource}'`));
+}
+
 client.getResource = function({ resource, id }) {
   if (this.isValidResource(resource)) {
     const fullUrl = `${this.baseUrl}${resource}/${id}/`;
@@ -23,10 +38,6 @@ client.getResource = function({ resource, id }) {
   }
 
   return new Promise((resolve, reject) => reject(`invalid resource: '${resource}'`));
-}
-
-client.getResourceWithFullUrl = function(url) {
-
 }
 
 export default client;
