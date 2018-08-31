@@ -5,45 +5,67 @@ import starWarsClient from './api_clients/starwars_api_client.js';
 import appClient from './api_clients/app_api_client.js';
 
 export default class Home extends PureComponent {
-  state = { resource: '', id: 0, apiData: {} };
+  state = {
+    inputValue: '',
+    apiData: {},
+  };
 
-  makeRequest = (e) => {
+  componentDidMount() {
+    const resource = 'people';
+    const id = '1';
+    this.makeRequest({ resource, id });
+  }
+
+  submitForm = (e) => {
     e.preventDefault();
-    const { resource, id } = this.state;
+    const { resource, id } = this.getResourceParts(this.state.inputValue);
+    this.makeRequest({ resource, id });
+  }
 
+  makeRequest({ resource, id }) {
     appClient.getResource({ resource, id }).then((res) => {
-      if (res) this.setState({ apiData: res.person });
+      if (res) this.setState({ apiData: res.resource || res });
     }).catch((err) => {
       console.warn('err', err);
     });
   }
 
-  getResource(inputValue) {
+  getResourceParts(inputValue) {
     const parts = inputValue.split('/');
     return { resource: parts[0], id: parts[1] };
   }
 
-  changeResource = (e) => {
-    const { value } = e.target;
-    const { resource, id } = this.getResource(value);
+  inputChange = (e) => {
+    const inputValue = e.target.value;
+    this.setState({ inputValue });
+  }
 
-    this.setState({ resource, id });
+  linkClick = (path) => {
+    const sawapiBaseUrl = 'https://swapi.co/api/';
+    const substringStart = sawapiBaseUrl.length;
+    const substringEnd = path.length;
+    const resourcePath = path.substring(substringStart, substringEnd);
+    const { resource, id } = this.getResourceParts(resourcePath);
+
+    this.setState({ inputValue: `${resource}/${id}` });
+    this.makeRequest({ resource, id });
   }
 
   render() {
-    const { apiData } = this.state;
+    const { apiData, inputValue } = this.state;
 
     return (
       <div className='home'>
-        <form onSubmit={this.makeRequest}>
+        <form onSubmit={this.submitForm}>
           <InputButtonCombo
-            inputChange={this.changeResource}
+            inputChange={this.inputChange}
             buttonText='request'
-            placeholder='/people/1'
+            placeholder='people/1'
+            inputValue={inputValue}
             autoFocus
           />
         </form>
-        <Results data={apiData} />
+        <Results data={apiData} linkClick={this.linkClick} />
       </div>
     );
   }

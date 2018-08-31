@@ -5,7 +5,7 @@ class PeopleController < ApplicationController
     person = Person.find_by_swapi_id(params['id'])
 
     if person
-      render json: { person: person }
+      render json: { resource: person }
     else
       render json: { message: 'cant find person' }, status: :not_found
     end
@@ -15,7 +15,7 @@ class PeopleController < ApplicationController
     person = Person.new(valid_params)
 
     if person.save
-      render json: { person: person }
+      render json: { resource: person }
     else
       # just sending a bad request back for now
       render json: { message: 'person creation failed' }, status: :bad_request

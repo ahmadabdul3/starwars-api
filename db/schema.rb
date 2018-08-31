@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180831184229) do
+ActiveRecord::Schema.define(version: 20180831195750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,27 @@ ActiveRecord::Schema.define(version: 20180831184229) do
     t.datetime "updated_at", null: false
     t.string "swapi_id"
     t.string "skin_color"
+  end
+
+  create_table "species", force: :cascade do |t|
+    t.string "name"
+    t.string "classification"
+    t.string "designation"
+    t.string "average_height"
+    t.string "skin_colors"
+    t.string "hair_colors"
+    t.string "eye_colors"
+    t.string "average_lifespan"
+    t.string "homeworld"
+    t.string "language"
+    t.jsonb "people"
+    t.jsonb "films"
+    t.string "created"
+    t.string "edited"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "swapi_id"
   end
 
 end

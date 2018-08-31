@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 export default class Results extends PureComponent {
   render() {
-    const { data } = this.props;
+    const { data, linkClick } = this.props;
     if (!data) return null;
 
     return (
@@ -14,7 +14,7 @@ export default class Results extends PureComponent {
                 <span className='key'>
                   { dataKey }
                 </span>
-                <DataValue value={data[dataKey]} />
+                <DataValue value={data[dataKey]} linkClick={linkClick} />
               </div>
             )
           })
@@ -27,9 +27,12 @@ export default class Results extends PureComponent {
 class DataValue extends PureComponent {
   determineElement(value, key) {
     if (value.indexOf('https://') > -1) {
+      const { linkClick } = this.props;
       return (
         <span key={`${key}${value}`} className='value value-link'>
-          <button>{value}</button>
+          <button onClick={() => { linkClick(value); }}>
+            {value}
+          </button>
         </span>
       );
     }

@@ -18,6 +18,7 @@ export default class InputButtonCombo extends PureComponent {
       buttonText,
       buttonClick,
       placeholder,
+      inputValue,
     } = this.props;
 
     return (
@@ -26,6 +27,7 @@ export default class InputButtonCombo extends PureComponent {
           onChange={inputChange}
           placeholder={placeholder}
           ref={(input) => { this.inputRef = input; } }
+          value={inputValue}
         />
         <button onClick={buttonClick}>
           { buttonText }

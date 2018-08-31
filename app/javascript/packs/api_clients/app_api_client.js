@@ -2,40 +2,38 @@ import http from './http';
 import starWarsClient from './starwars_api_client.js';
 
 const client = {
-  baseUrl: '/people/',
-  appResources: { people: true },
-  resourceInApp: function(resource) {
-    return (resource in this.appResources);
-  }
+  validResources: { people: true, species: true },
+  isValidResource: function(resource) {
+    return (resource in this.validResources);
+  },
 };
 
 client.getResource = function({ resource, id }) {
-  if (this.resourceInApp(resource)) return this.getResourceFromApp({ resource, id });
+  if (this.isValidResource(resource)) return this.getResourceFromApp({ resource, id });
   return starWarsClient.getResource({ resource, id });
 }
 
 client.getResourceFromApp = function({ resource, id }) {
-  const url = buildUrl({ resource, id });
+  let url = `/${resource}/`;
+  if (id) url += `${id}/`;
+
   return http.get(url).then((res) => {
     if (res) return res;
-    return createPersonFromStarwarsApi({ resource, id });
+    return createResourceFromStarwarsApi({ resource, id });
   });
 }
 
-client.createPerson = function(person) {
-  return http.post(this.baseUrl, person);
+client.createResource = function({ resource, attributes }) {
+  const url = '/' + resource;
+  return http.post(url, attributes);
 }
 
 export default client;
 
-function createPersonFromStarwarsApi({ resource, id }) {
+function createResourceFromStarwarsApi({ resource, id }) {
   return starWarsClient.getResource({ resource, id }).then((res) => {
-    if (res) return client.createPerson({ ...res, swapi_id: id });
+    if (!res) return;
+    const attributes = { ...res, swapi_id: id };
+    return client.createResource({ resource, attributes });
   });
-}
-
-function buildUrl({ resource, id }) {
-  let url = `/${resource}/`;
-  if (id) url += `${id}/`;
-  return url;
 }
