@@ -5,18 +5,29 @@ import starWarsClient from './api_clients/starwars_api_client.js';
 import appClient from './api_clients/app_api_client.js';
 
 export default class Home extends PureComponent {
-  state = { id: 0, apiData: {} };
+  state = { resource: '', id: 0, apiData: {} };
 
   makeRequest = (e) => {
     e.preventDefault();
-    appClient.getPerson(this.state.id).then((res) => {
+    const { resource, id } = this.state;
+
+    appClient.getResource({ resource, id }).then((res) => {
       if (res) this.setState({ apiData: res.person });
+    }).catch((err) => {
+      console.warn('err', err);
     });
   }
 
-  changeId = (e) => {
-    const id = e.target.value;
-    this.setState({ id: parseInt(id, 10) });
+  getResource(inputValue) {
+    const parts = inputValue.split('/');
+    return { resource: parts[0], id: parts[1] };
+  }
+
+  changeResource = (e) => {
+    const { value } = e.target;
+    const { resource, id } = this.getResource(value);
+
+    this.setState({ resource, id });
   }
 
   render() {
@@ -26,7 +37,7 @@ export default class Home extends PureComponent {
       <div className='home'>
         <form onSubmit={this.makeRequest}>
           <InputButtonCombo
-            inputChange={this.changeId}
+            inputChange={this.changeResource}
             buttonText='request'
             placeholder='/people/1'
             autoFocus

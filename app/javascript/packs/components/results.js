@@ -6,7 +6,7 @@ export default class Results extends PureComponent {
     if (!data) return null;
 
     return (
-      <div>
+      <div className='results'>
         {
           Object.keys(data).map((dataKey, index) => {
             return (
@@ -28,30 +28,27 @@ class DataValue extends PureComponent {
   determineElement(value, key) {
     if (value.indexOf('https://') > -1) {
       return (
-        <button key={`${key}${value}`} className='value-button'>
+        <a key={`${key}${value}`} className='value value-link'>
           {value}
-        </button>
+        </a>
       );
     }
 
     return <span key={`${key}${value}`} className='value'>{value}</span>;
   }
 
+  get valueList() {
+    const { value } = this.props;
+    const noData = '- no data -';
+
+    if (value.length < 1) return this.determineElement(noData);
+    return value.map((val, key) => this.determineElement(val, key));
+  }
+
   render() {
     const { value } = this.props;
 
-    if (Array.isArray(value)) {
-      return (
-        <div className='value-list'>
-          {
-            value.map((val, key) => {
-              return this.determineElement(val, key);
-            })
-          }
-        </div>
-      );
-    }
-
-    return this.determineElement(`${value}`);
+    if (!Array.isArray(value)) return this.determineElement(`${value}`);
+    return <div className='value-list'> {this.valueList} </div>;
   }
 }

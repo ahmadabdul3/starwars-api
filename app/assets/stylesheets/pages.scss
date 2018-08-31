@@ -70,3 +70,44 @@ button {
   padding: 40px;
   font-family: sans-serif;
 }
+
+.results {
+  margin-top: 20px;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid $border-color;
+  background: lighten($border-color, 5%);
+  border-radius: 5px;
+}
+
+.key-value-pair {
+  margin-top: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  padding: 0 15px;
+
+  .key {
+    display: inline-block;
+    font-weight: bold;
+    width: 100px;
+  }
+
+  .value, .value-link {
+    margin-left: 5px;
+  }
+
+  .value + .value {
+    margin-top: 3px;
+  }
+
+  .value-link {
+    display: inline-block;
+    width: calc(100% - 200px);
+  }
+
+  .value-list {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 200px);
+  }
+}
