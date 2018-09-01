@@ -5,7 +5,13 @@
 $border-color: #E6ECF1;
 $green: #6cd4b8;
 
+html, body, #react-entry, .home {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
+  margin: 0;
   background: lighten($border-color, 5%);
 }
 
@@ -45,6 +51,25 @@ button {
     cursor: pointer;
     color: darken($green, 10%);
   }
+
+  .title {
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-align: left;
+  }
+
+  .subtitle {
+    font-weight: bold;
+    color: darken($border-color, 70%);
+    margin-top: 7px;
+    font-size: 12px;
+    text-align: left;
+  }
+}
+
+.navigation-button {
+  box-shadow: 0 3px 8px 0 rgba(116, 129, 141, 0.1);
 }
 
 .input-button-combo {
@@ -69,16 +94,47 @@ button {
   }
 }
 
-.home {
+%fixed-size-flex-child {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: white;
+}
+
+.page-section {
   box-sizing: border-box;
   padding: 40px;
+  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   font-family: sans-serif;
 }
 
-.results {
+.search-bar {
+  @extend %fixed-size-flex-child;
+  padding-top: 40px;
+  border-bottom: 1px solid darken($border-color, 2%);
+}
 
+.pagination {
+  @extend %fixed-size-flex-child;
+  border-top: 1px solid darken($border-color, 2%);
+
+  .page-section {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.results {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow-y: auto;
 }
 
 .result {
@@ -89,6 +145,10 @@ button {
   background: white;
   border-radius: 5px;
   box-shadow: 0 3px 8px 0 rgba(116, 129, 141, 0.1);
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .key-value-pair {

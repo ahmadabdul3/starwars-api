@@ -4,8 +4,8 @@ export default class Results extends PureComponent {
   get markup() {
     const { data } = this.props;
 
-    if (data.results) return <ManyResources { ...this.props } />;
-    return <SingleResource { ...this.props } />;
+    if (data.results) return <MultiResult { ...this.props } />;
+    return <KeyValuePair { ...this.props } />;
   }
 
   render() {
@@ -14,13 +14,15 @@ export default class Results extends PureComponent {
 
     return (
       <div className='results'>
-        { this.markup }
+        <section className='page-section'>
+          { this.markup }
+        </section>
       </div>
     );
   }
 }
 
-class ManyResources extends PureComponent {
+class MultiResult extends PureComponent {
   render() {
     const { data, linkClick } = this.props;
 
@@ -29,7 +31,7 @@ class ManyResources extends PureComponent {
         {
           data.results.map((item, index) => {
             const key = `${index}-${item.url}`;
-            return <SingleResource key={key} data={item} linkClick={linkClick} />
+            return <KeyValuePair key={key} data={item} linkClick={linkClick} />
           })
         }
       </div>
@@ -37,7 +39,7 @@ class ManyResources extends PureComponent {
   }
 }
 
-class SingleResource extends PureComponent {
+class KeyValuePair extends PureComponent {
   render() {
     const { data, linkClick } = this.props;
 

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import InputButtonCombo from './components/input_button_combo';
 import Results from './components/results';
+import Pagination from './components/pagination';
 import starWarsClient from './api_clients/starwars_api_client.js';
 import appClient from './api_clients/app_api_client.js';
 
@@ -35,8 +36,28 @@ export default class Home extends PureComponent {
       .catch(this.handleError);
   }
 
+  handleNavButtonClick = (url) => {
+    starWarsClient.getAllWithUrl(url)
+      .then(this.handleResponse)
+      .catch(this.handleError);
+  }
+
   handleResponse = (res) => {
-    if (res) this.setState({ apiData: res.resource || res });
+    if (!res) return;
+
+    const resource = res.resource || res;
+    const newState = { apiData: resource };
+    let previous, next;
+
+    if (resource.results) {
+      previous = resource.previous;
+      next = resource.next;
+    }
+
+    newState.previous = previous;
+    newState.next = next;
+
+    this.setState(newState);
   }
 
   handleError = (err) => { console.warn('err', err); }
@@ -63,20 +84,23 @@ export default class Home extends PureComponent {
   }
 
   render() {
-    const { apiData, inputValue } = this.state;
+    const { apiData, inputValue, previous, next } = this.state;
 
     return (
       <div className='home'>
-        <form onSubmit={this.submitForm}>
-          <InputButtonCombo
-            inputChange={this.inputChange}
-            buttonText='request'
-            placeholder='people/1'
-            inputValue={inputValue}
-            autoFocus
-          />
+        <form onSubmit={this.submitForm} className='search-bar'>
+          <section className='page-section'>
+            <InputButtonCombo
+              inputChange={this.inputChange}
+              buttonText='request'
+              placeholder='people/1'
+              inputValue={inputValue}
+              autoFocus
+            />
+          </section>
         </form>
         <Results data={apiData} linkClick={this.linkClick} />
+        <Pagination prev={previous} next={next} navigate={this.handleNavButtonClick} />
       </div>
     );
   }
