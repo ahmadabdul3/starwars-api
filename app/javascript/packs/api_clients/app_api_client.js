@@ -27,7 +27,6 @@ function getResourceFromApp({ resource, id }) {
   return http.get(url).then((res) => {
     return res;
   }).catch((err) => {
-    console.log(Object.keys(err));
     if (err.toString() === 'Error: Not Found') {
       return createResourceFromStarwarsApi({ resource, id });
     }
