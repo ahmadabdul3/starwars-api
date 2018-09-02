@@ -9,18 +9,8 @@ const client = {
 };
 
 client.getResource = function({ resource, id }) {
-  if (this.isValidResource(resource)) return this.getResourceFromApp({ resource, id });
+  if (this.isValidResource(resource)) return getResourceFromApp({ resource, id });
   return starWarsClient.getResource({ resource, id });
-}
-
-client.getResourceFromApp = function({ resource, id }) {
-  let url = `/${resource}/`;
-  if (id) url += `${id}/`;
-
-  return http.get(url).then((res) => {
-    if (res) return res;
-    return createResourceFromStarwarsApi({ resource, id });
-  });
 }
 
 client.createResource = function({ resource, attributes }) {
@@ -30,9 +20,22 @@ client.createResource = function({ resource, attributes }) {
 
 export default client;
 
+function getResourceFromApp({ resource, id }) {
+  let url = `/${resource}/`;
+  if (id) url += `${id}/`;
+
+  return http.get(url).then((res) => {
+    return res;
+  }).catch((err) => {
+    console.log(Object.keys(err));
+    if (err.toString() === 'Error: Not Found') {
+      return createResourceFromStarwarsApi({ resource, id });
+    }
+  });
+}
+
 function createResourceFromStarwarsApi({ resource, id }) {
   return starWarsClient.getResource({ resource, id }).then((res) => {
-    if (!res) return;
     const attributes = { ...res, swapi_id: id };
     return client.createResource({ resource, attributes });
   });

@@ -9,6 +9,7 @@ export default class Home extends PureComponent {
   state = {
     inputValue: '',
     apiData: {},
+    loaderVisible: false,
   };
 
   componentDidMount() {
@@ -16,6 +17,9 @@ export default class Home extends PureComponent {
     const id = '1';
     this.getSingleResourceItem({ resource, id });
   }
+
+  showLoader() { this.setState({ loaderVisible: true }); }
+  hideLoader() { this.setState({ loaderVisible: false }); }
 
   submitForm = (e) => {
     e.preventDefault();
@@ -25,24 +29,28 @@ export default class Home extends PureComponent {
   }
 
   getSingleResourceItem({ resource, id }) {
+    this.showLoader();
     appClient.getResource({ resource, id })
       .then(this.handleResponse)
       .catch(this.handleError);
   }
 
   getAllResourceItems({ resource }) {
+    this.showLoader();
     starWarsClient.getAll({ resource })
       .then(this.handleResponse)
       .catch(this.handleError);
   }
 
   handleNavButtonClick = (url) => {
+    this.showLoader();
     starWarsClient.getAllWithUrl(url)
       .then(this.handleResponse)
       .catch(this.handleError);
   }
 
   handleResponse = (res) => {
+    this.hideLoader();
     if (!res) return;
 
     const resource = res.resource || res;
@@ -60,7 +68,12 @@ export default class Home extends PureComponent {
     this.setState(newState);
   }
 
-  handleError = (err) => { console.warn('err', err); }
+  handleError = (err) => {
+    this.hideLoader();
+    console.log('handle error', err);
+    const error = err.detail || err;
+    this.setState({ apiData: { error } });
+  }
 
   getResourceParts(inputValue) {
     const parts = inputValue.split('/');
@@ -84,7 +97,7 @@ export default class Home extends PureComponent {
   }
 
   render() {
-    const { apiData, inputValue, previous, next } = this.state;
+    const { apiData, inputValue, previous, next, loaderVisible } = this.state;
 
     return (
       <div className='home'>
@@ -99,9 +112,39 @@ export default class Home extends PureComponent {
             />
           </section>
         </form>
-        <Results data={apiData} linkClick={this.linkClick} />
+          <Loader loaderVisible={loaderVisible} />
+          {
+            loaderVisible ? null : <Results data={apiData} linkClick={this.linkClick} />
+          }
         <Pagination prev={previous} next={next} navigate={this.handleNavButtonClick} />
       </div>
     );
+  }
+}
+
+// - the reason the loader is hidden with css is so that the images are
+//   not re-fetched everytime we show the loader
+class Loader extends PureComponent {
+  render() {
+    const { loaderVisible } = this.props;
+    const className = loaderVisible ? 'loader' : 'loader hidden';
+
+    return (
+      <div className={className}>
+        <h2>
+          Loading, please wait
+        </h2>
+        <section className='images'>
+          <img
+            src='https://orig00.deviantart.net/d13f/f/2018/019/d/c/vader_defend7_by_z_studios-dc0jfxq.gif'
+            alt='loading...'
+          />
+          <img
+            src='https://orig00.deviantart.net/ba1b/f/2018/006/b/0/droideka_shoot_by_z_studios-dbz5rdc.gif'
+            alt='loading...'
+          />
+        </section>
+      </div>
+    )
   }
 }

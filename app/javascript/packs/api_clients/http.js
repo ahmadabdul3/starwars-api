@@ -5,8 +5,6 @@ http.base = function(method, url, data) {
   return fetch(url, fetchParams(method, data)).then((response) => {
     if (!response.ok) throw new Error(response.statusText);
     return response.json();
-  }).catch((err) => {
-    console.log('error', err);
   });
 };
 

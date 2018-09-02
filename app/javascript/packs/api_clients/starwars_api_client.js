@@ -38,7 +38,9 @@ client.getAllWithUrl = function(url) {
 client.getResource = function({ resource, id }) {
   if (this.isValidResource(resource)) {
     const fullUrl = `${this.baseUrl}${resource}/${id}/`;
-    return http.get(fullUrl);
+    return http.get(fullUrl).catch((err) => {
+      throw new Error(`resource '${resource}' with id '${id}' doesn't exist`);
+    });
   }
 
   return new Promise((resolve, reject) => reject(`invalid resource: '${resource}'`));
