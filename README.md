@@ -16,7 +16,7 @@ Some points on engineering / code decisions:
 
 ### Build Steps
 - Clone the repo
-- Ensure Rails (5.1+), Bundler, Yarn, and NPM are installed
+- Ensure PostgreSQL, Rails (5.1+), Bundler, Yarn, and NPM are installed
 - Run `bundle install` in a CLI (terminal, iTerm, etc...) - this will download all dependencies
 - Run `yarn install` to install all Node / NPM packages (this will allow the next steps to work)
 - Building the front-end options: 
