@@ -18,6 +18,7 @@ Some points on engineering / code decisions:
 - Clone the repo
 - Ensure Rails (5.1+), Bundler, Yarn, and NPM are installed
 - Run `bundle install` in a CLI (terminal, iTerm, etc...) - this will download all dependencies
+- Run `yarn install` to install all Node / NPM packages (this will allow the next steps to work)
 - Building the front-end options: 
   - (1) to build the front-end bundle 1 time run `./bin/webpack`
   - (2) to build the front-end bundle in watch mode so that it is rebuilt when changes are made to Javascript files run `./bin/webpack --watch` (requires a manual refresh of the browswer)
