@@ -1,4 +1,6 @@
 ## STAR WARS API
+Live App: https://abdul-starwars-api.herokuapp.com/
+
 This is a rails app that communicates with the star wars api at https://swapi.co/ to show star wars related information. It also caches the 'people' and 'species' resources in postgres. 
 
 ### Table of contents
